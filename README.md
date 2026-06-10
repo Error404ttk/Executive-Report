@@ -1,5 +1,7 @@
 # Executive Report
 
+ระบบดูรายงานการประชุมและรายงานสำหรับผู้บริหาร เช่น รายงานฝ่าย รายงานทีม รายงานตรวจสอบภายใน และรายงานไซเบอร์
+
 Production-ready executive report system for PDF upload, AI bullet-summary analysis, executive acknowledgment, comments, audit trail, and admin management.
 
 The application source is in [`Executive Report/`](Executive%20Report/).
