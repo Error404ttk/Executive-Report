@@ -57,7 +57,7 @@ export default function ConfirmModal({
       />
 
       {/* Modal Content Card */}
-      <div className="relative bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 overflow-hidden border border-slate-100 transform transition-all scale-100 animate-in fade-in zoom-in-95 duration-200 z-[110]">
+      <div className="relative bg-white rounded-xl sm:rounded-2xl shadow-2xl max-w-sm w-full p-4 sm:p-6 max-h-[calc(100dvh-2rem)] overflow-y-auto border border-slate-100 transform transition-all scale-100 animate-in fade-in zoom-in-95 duration-200 z-[110]">
         <button 
           type="button" 
           onClick={onCancel}
@@ -79,7 +79,7 @@ export default function ConfirmModal({
             {message}
           </p>
 
-          <div className="flex items-center justify-center gap-3 w-full">
+          <div className="flex flex-col-reverse sm:flex-row items-center justify-center gap-3 w-full">
             <button
               type="button"
               onClick={onCancel}

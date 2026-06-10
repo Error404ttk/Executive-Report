@@ -16,7 +16,7 @@ export default function ReportPreviewPanel({ report, onClose }: ReportPreviewPan
       onClick={onClose}
     >
       <div
-        className="w-full max-w-md bg-white h-full shadow-2xl flex flex-col animate-in slide-in-from-right-8 duration-300"
+        className="w-full sm:max-w-md bg-white h-full shadow-2xl flex flex-col animate-in slide-in-from-right-8 duration-300"
         onClick={e => e.stopPropagation()}
       >
         {/* Header */}
@@ -35,8 +35,8 @@ export default function ReportPreviewPanel({ report, onClose }: ReportPreviewPan
         </div>
 
         {/* Body */}
-        <div className="flex-1 overflow-y-auto p-5">
-          <h4 className="text-lg font-bold text-slate-900 mb-2 leading-tight">{report.title}</h4>
+        <div className="flex-1 overflow-y-auto p-4 sm:p-5">
+          <h4 className="text-base sm:text-lg font-bold text-slate-900 mb-2 leading-tight break-words">{report.title}</h4>
 
           <div className="flex flex-wrap items-center gap-2 mb-6 text-xs text-slate-500 font-bold">
             <span className="bg-teal-50 text-teal-700 px-2 py-1 rounded">

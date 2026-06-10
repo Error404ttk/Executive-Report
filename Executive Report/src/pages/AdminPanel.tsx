@@ -10,17 +10,17 @@ export default function AdminPanel() {
   const [activeTab, setActiveTab] = useState<'users' | 'agencies' | 'audit'>('users');
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       <header>
-        <h1 className="text-2xl font-bold text-slate-800 drop-shadow-sm">การตั้งค่าผู้ดูแลระบบ</h1>
+        <h1 className="text-xl sm:text-2xl font-bold text-slate-800 drop-shadow-sm">การตั้งค่าผู้ดูแลระบบ</h1>
         <p className="text-slate-500 mt-1 text-sm font-medium">จัดการผู้ใช้งาน หน่วยงาน และข้อมูลระบบ</p>
       </header>
 
       <div className="bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden">
-        <div className="flex border-b border-slate-200">
+        <div className="flex overflow-x-auto border-b border-slate-200">
           <button 
             type="button"
-            className={`flex-1 py-4 px-6 text-sm font-bold flex items-center justify-center gap-2 ${activeTab === 'users' ? 'text-[#009688] border-b-2 border-[#009688] bg-teal-50/50' : 'text-slate-500 hover:text-slate-700 bg-slate-50'}`}
+            className={`min-w-36 flex-1 py-3 sm:py-4 px-3 sm:px-6 text-xs sm:text-sm font-bold flex items-center justify-center gap-2 ${activeTab === 'users' ? 'text-[#009688] border-b-2 border-[#009688] bg-teal-50/50' : 'text-slate-500 hover:text-slate-700 bg-slate-50'}`}
             onClick={() => setActiveTab('users')}
           >
             <UserCircle className="w-5 h-5" />
@@ -28,7 +28,7 @@ export default function AdminPanel() {
           </button>
           <button 
             type="button"
-            className={`flex-1 py-4 px-6 text-sm font-bold flex items-center justify-center gap-2 ${activeTab === 'agencies' ? 'text-[#009688] border-b-2 border-[#009688] bg-teal-50/50' : 'text-slate-500 hover:text-slate-700 bg-slate-50'}`}
+            className={`min-w-32 flex-1 py-3 sm:py-4 px-3 sm:px-6 text-xs sm:text-sm font-bold flex items-center justify-center gap-2 ${activeTab === 'agencies' ? 'text-[#009688] border-b-2 border-[#009688] bg-teal-50/50' : 'text-slate-500 hover:text-slate-700 bg-slate-50'}`}
             onClick={() => setActiveTab('agencies')}
           >
             <Building className="w-5 h-5" />
@@ -36,7 +36,7 @@ export default function AdminPanel() {
           </button>
           <button 
             type="button"
-            className={`flex-1 py-4 px-6 text-sm font-bold flex items-center justify-center gap-2 ${activeTab === 'audit' ? 'text-[#009688] border-b-2 border-[#009688] bg-teal-50/50' : 'text-slate-500 hover:text-slate-700 bg-slate-50'}`}
+            className={`min-w-32 flex-1 py-3 sm:py-4 px-3 sm:px-6 text-xs sm:text-sm font-bold flex items-center justify-center gap-2 ${activeTab === 'audit' ? 'text-[#009688] border-b-2 border-[#009688] bg-teal-50/50' : 'text-slate-500 hover:text-slate-700 bg-slate-50'}`}
             onClick={() => setActiveTab('audit')}
           >
             <Activity className="w-5 h-5" />
@@ -44,7 +44,7 @@ export default function AdminPanel() {
           </button>
         </div>
 
-        <div className="p-6">
+        <div className="p-3 sm:p-6">
           {activeTab === 'users' && <UsersManager users={users} agencies={agencies} addUser={addUser} updateUser={updateUser} deleteUser={deleteUser} />}
           {activeTab === 'agencies' && <AgenciesManager agencies={agencies} addAgency={addAgency} updateAgency={updateAgency} deleteAgency={deleteAgency} />}
           {activeTab === 'audit' && <AuditTrailManager auditLogs={auditLogs} users={users} />}
@@ -144,15 +144,15 @@ function UsersManager({ users, agencies, addUser, updateUser, deleteUser }: any)
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-4">
         <h2 className="text-sm font-bold text-slate-800">จัดการผู้ใช้งาน ({users.length})</h2>
-        <button type="button" onClick={openAddModal} className="inline-flex items-center gap-2 px-3 py-2 bg-[#009688] text-white text-xs font-bold rounded shadow-sm hover:opacity-90 transition-opacity cursor-pointer">
+        <button type="button" onClick={openAddModal} className="inline-flex w-full sm:w-auto items-center justify-center gap-2 px-3 py-2 bg-[#009688] text-white text-xs font-bold rounded shadow-sm hover:opacity-90 transition-opacity cursor-pointer">
           <Plus className="w-4 h-4" /> เพิ่มผู้ใช้งาน
         </button>
       </div>
 
       <div className="overflow-x-auto rounded border border-slate-200">
-        <table className="min-w-full divide-y divide-slate-200 text-xs">
+        <table className="min-w-[760px] w-full divide-y divide-slate-200 text-xs">
           <thead className="bg-slate-50">
             <tr>
               <th className="px-4 py-3 text-left font-bold text-slate-600">ชื่อ - สกุล</th>
@@ -200,8 +200,8 @@ function UsersManager({ users, agencies, addUser, updateUser, deleteUser }: any)
 
       {/* User Modal */}
       {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
-          <div className="bg-white rounded-xl shadow-xl w-full max-w-md overflow-hidden border border-slate-100 transform transition-all scale-100">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-2 sm:p-4">
+          <div className="bg-white rounded-xl shadow-xl w-full max-w-md max-h-[calc(100dvh-1rem)] sm:max-h-[calc(100dvh-2rem)] overflow-y-auto border border-slate-100 transform transition-all scale-100">
             <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 bg-slate-50">
               <h3 className="text-sm font-bold text-slate-800">
                 {editingUser ? 'แก้ไขข้อมูลผู้ใช้งาน' : 'เพิ่มผู้ใช้งานระบบใหม่'}
@@ -211,7 +211,7 @@ function UsersManager({ users, agencies, addUser, updateUser, deleteUser }: any)
               </button>
             </div>
             
-            <form onSubmit={handleSubmit} className="p-6 space-y-4 text-slate-700">
+            <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-4 text-slate-700">
               <div>
                 <label className="block text-xs font-bold text-slate-500 mb-1">ชื่อ - สกุล</label>
                 <input 
@@ -236,7 +236,7 @@ function UsersManager({ users, agencies, addUser, updateUser, deleteUser }: any)
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-bold text-slate-500 mb-1">บทบาท (Role)</label>
                   <select 
@@ -286,19 +286,19 @@ function UsersManager({ users, agencies, addUser, updateUser, deleteUser }: any)
                 </div>
               )}
 
-              <div className="pt-4 flex items-center justify-end gap-2 border-t border-slate-100">
+              <div className="pt-4 flex flex-col-reverse sm:flex-row sm:items-center sm:justify-end gap-2 border-t border-slate-100">
                 <button 
                   type="button" 
                   onClick={() => setShowModal(false)} 
                   disabled={isSaving}
-                  className="px-4 py-2 text-xs font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors cursor-pointer disabled:cursor-not-allowed disabled:opacity-60"
+                  className="w-full sm:w-auto px-4 py-2 text-xs font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors cursor-pointer disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   ยกเลิก
                 </button>
                 <button 
                   type="submit" 
                   disabled={isSaving}
-                  className="px-4 py-2 text-xs font-semibold text-white bg-[#009688] hover:bg-teal-700 rounded-lg transition-colors shadow-sm cursor-pointer disabled:cursor-not-allowed disabled:opacity-60"
+                  className="w-full sm:w-auto px-4 py-2 text-xs font-semibold text-white bg-[#009688] hover:bg-teal-700 rounded-lg transition-colors shadow-sm cursor-pointer disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {isSaving ? 'กำลังบันทึก...' : 'บันทึกข้อมูล'}
                 </button>
@@ -376,17 +376,17 @@ function AgenciesManager({ agencies, addAgency, updateAgency, deleteAgency }: an
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-4">
         <h2 className="text-sm font-bold text-slate-800">จัดการหน่วยงาน ({agencies.length})</h2>
-        <button type="button" onClick={openAddModal} className="inline-flex items-center gap-2 px-3 py-2 bg-[#009688] text-white text-xs font-bold rounded shadow-sm hover:opacity-90 transition-opacity cursor-pointer">
+        <button type="button" onClick={openAddModal} className="inline-flex w-full sm:w-auto items-center justify-center gap-2 px-3 py-2 bg-[#009688] text-white text-xs font-bold rounded shadow-sm hover:opacity-90 transition-opacity cursor-pointer">
           <Plus className="w-4 h-4" /> เพิ่มหน่วยงาน
         </button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {agencies.map((agency: Agency) => (
-           <div key={agency.id} className="border border-slate-200 rounded p-4 flex justify-between items-start bg-slate-50 hover:bg-white hover:border-[#009688] transition-colors">
-              <div>
+           <div key={agency.id} className="border border-slate-200 rounded p-4 flex justify-between items-start gap-3 bg-slate-50 hover:bg-white hover:border-[#009688] transition-colors">
+              <div className="min-w-0">
                 <h3 className="font-bold text-sm text-slate-800">{agency.name}</h3>
                 <p className="text-xs text-slate-500 mt-1">{agency.description || 'ไม่มีรายละเอียด'}</p>
                 <p className="text-[10px] text-slate-400 mt-3 font-bold">เพิ่มเมื่อ: {new Date(agency.createdAt).toLocaleDateString('th-TH')}</p>
@@ -408,8 +408,8 @@ function AgenciesManager({ agencies, addAgency, updateAgency, deleteAgency }: an
 
       {/* Agency Modal */}
       {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
-          <div className="bg-white rounded-xl shadow-xl w-full max-w-md overflow-hidden border border-slate-100 transform transition-all scale-100">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-2 sm:p-4">
+          <div className="bg-white rounded-xl shadow-xl w-full max-w-md max-h-[calc(100dvh-1rem)] sm:max-h-[calc(100dvh-2rem)] overflow-y-auto border border-slate-100 transform transition-all scale-100">
             <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 bg-slate-50">
               <h3 className="text-sm font-bold text-slate-800">
                 {editingAgency ? 'แก้ไขข้อมูลหน่วยงาน' : 'เพิ่มหน่วยงานใหม่'}
@@ -419,7 +419,7 @@ function AgenciesManager({ agencies, addAgency, updateAgency, deleteAgency }: an
               </button>
             </div>
             
-            <form onSubmit={handleSubmit} className="p-6 space-y-4 text-slate-700">
+            <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-4 text-slate-700">
               <div>
                 <label className="block text-xs font-bold text-slate-500 mb-1">ชื่อหน่วยงาน</label>
                 <input 
@@ -443,17 +443,17 @@ function AgenciesManager({ agencies, addAgency, updateAgency, deleteAgency }: an
                 />
               </div>
 
-              <div className="pt-4 flex items-center justify-end gap-2 border-t border-slate-100">
+              <div className="pt-4 flex flex-col-reverse sm:flex-row sm:items-center sm:justify-end gap-2 border-t border-slate-100">
                 <button 
                   type="button" 
                   onClick={() => setShowModal(false)} 
-                  className="px-4 py-2 text-xs font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors cursor-pointer"
+                  className="w-full sm:w-auto px-4 py-2 text-xs font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors cursor-pointer"
                 >
                   ยกเลิก
                 </button>
                 <button 
                   type="submit" 
-                  className="px-4 py-2 text-xs font-semibold text-white bg-[#009688] hover:bg-teal-700 rounded-lg transition-colors shadow-sm cursor-pointer"
+                  className="w-full sm:w-auto px-4 py-2 text-xs font-semibold text-white bg-[#009688] hover:bg-teal-700 rounded-lg transition-colors shadow-sm cursor-pointer"
                 >
                   บันทึกข้อมูล
                 </button>
@@ -503,7 +503,7 @@ function AuditTrailManager({ auditLogs, users }: { auditLogs: AuditLog[], users:
       </div>
 
       <div className="overflow-x-auto rounded border border-slate-200">
-        <table className="min-w-full divide-y divide-slate-200 text-xs">
+        <table className="min-w-[720px] w-full divide-y divide-slate-200 text-xs">
           <thead className="bg-slate-50">
             <tr>
               <th className="px-4 py-3 text-left font-bold text-slate-600">วัน/เวลา</th>

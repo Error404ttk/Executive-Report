@@ -73,11 +73,11 @@ export default function ReportsList() {
   const canSeeStats = ['admin', 'executive'].includes(currentUser?.role || '');
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Header */}
       <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-800 drop-shadow-sm">
+          <h1 className="text-xl sm:text-2xl font-bold text-slate-800 drop-shadow-sm">
             {CATEGORY_LABELS[category || ''] || 'รายงานทั้งหมด'}
           </h1>
           <p className="text-slate-500 mt-1 text-sm font-medium">รายการเอกสารการรายงานและสรุปย่อ</p>
@@ -86,7 +86,7 @@ export default function ReportsList() {
           <button
             type="button"
             onClick={() => setShowUploadModal(true)}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-[#009688] text-white rounded font-bold hover:opacity-90 transition-opacity text-sm shadow-sm"
+            className="inline-flex w-full sm:w-auto items-center justify-center gap-2 px-4 py-2 bg-[#009688] text-white rounded font-bold hover:opacity-90 transition-opacity text-sm shadow-sm"
           >
             <Plus className="w-4 h-4" />
             อัปโหลด PDF ใหม่
@@ -95,8 +95,8 @@ export default function ReportsList() {
       </header>
 
       {/* Search Bar */}
-      <div className="flex items-end space-x-4">
-        <div className="flex-1 max-w-sm flex flex-col">
+      <div className="flex items-end gap-4">
+        <div className="flex-1 max-w-none sm:max-w-sm flex flex-col">
           <label className="text-xs text-slate-500 font-bold mb-1">ค้นหารายงาน</label>
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
@@ -125,7 +125,7 @@ export default function ReportsList() {
               const uploader = userMap[report.uploadedBy]; // O(1) lookup
 
               return (
-                <li key={report.id} className="p-4 flex flex-col sm:flex-row sm:items-start gap-4 hover:bg-teal-50 transition-colors">
+                <li key={report.id} className="p-3 sm:p-4 flex flex-col sm:flex-row sm:items-start gap-3 sm:gap-4 hover:bg-teal-50 transition-colors">
                   <div className="p-2 bg-teal-100 text-[#009688] rounded shrink-0">
                     <FileText className="w-5 h-5" />
                   </div>
@@ -156,7 +156,7 @@ export default function ReportsList() {
                       <span>{new Date(report.uploadedAt).toLocaleString('th-TH')}</span>
                     </div>
                   </div>
-                  <div className="shrink-0 pt-2 sm:pt-0 flex flex-col items-end gap-2">
+                  <div className="shrink-0 pt-1 sm:pt-0 flex w-full sm:w-auto flex-row flex-wrap sm:flex-col items-center sm:items-end gap-2">
                     {canSeeStats && (
                       <span className="text-[10px] font-bold text-slate-500 bg-slate-100 px-2 py-1 rounded">
                         อ่านแล้ว: {views.filter(v => v.reportId === report.id).length} คน |{' '}

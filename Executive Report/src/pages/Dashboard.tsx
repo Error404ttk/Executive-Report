@@ -128,7 +128,7 @@ export default function Dashboard() {
             const isAcknowledged = acknowledgments.some(a => a.reportId === report.id && a.userId === currentUser?.id);
             
             return (
-              <li key={report.id} className="p-4 flex items-start gap-4 hover:bg-teal-50 dark:hover:bg-slate-700 bg-teal-50/10 dark:bg-slate-800/50 cursor-pointer transition-colors border-b border-slate-100 dark:border-slate-700">
+              <li key={report.id} className="p-3 sm:p-4 flex flex-col sm:flex-row sm:items-start gap-3 sm:gap-4 hover:bg-teal-50 dark:hover:bg-slate-700 bg-teal-50/10 dark:bg-slate-800/50 cursor-pointer transition-colors border-b border-slate-100 dark:border-slate-700">
                 <div className="p-2 bg-teal-100 dark:bg-teal-900 text-teal-700 dark:text-teal-300 rounded border border-teal-200 dark:border-teal-700 shrink-0">
                   <FileText className="w-5 h-5" />
                 </div>
@@ -136,7 +136,7 @@ export default function Dashboard() {
                   <Link to={`/report/${report.id}`} className="text-sm font-bold text-slate-800 dark:text-slate-200 hover:text-teal-700 dark:hover:text-teal-400 truncate block">
                     {report.title}
                   </Link>
-                  <div className="mt-1 flex items-center gap-3 text-xs text-slate-500 dark:text-slate-400">
+                  <div className="mt-1 flex flex-wrap items-center gap-2 sm:gap-3 text-xs text-slate-500 dark:text-slate-400">
                     <span className="capitalize bg-slate-100 dark:bg-slate-700 px-2 py-0.5 rounded text-[10px] font-bold text-slate-600 dark:text-slate-300 border dark:border-slate-600">
                       หมวดหมู่: {report.category}
                     </span>
@@ -179,14 +179,14 @@ export default function Dashboard() {
   );
 
   const chartsSection = isExecutiveOrAdmin && (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
       {/* Chart 1: Report Submission Trends */}
-      <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700 p-5 transition-colors duration-200">
+      <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700 p-3 sm:p-5 min-w-0 transition-colors duration-200">
         <div className="flex items-center gap-2 mb-4">
           <BarChart2 className="w-5 h-5 text-indigo-500" />
           <h2 className="text-sm font-bold text-slate-800 dark:text-slate-100">แนวโน้มการส่งรายงาน (30 วันย้อนหลัง)</h2>
         </div>
-        <div className="h-64">
+        <div className="h-56 sm:h-64 min-w-0">
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={reportTrendsData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
               <defs>
@@ -210,12 +210,12 @@ export default function Dashboard() {
       </div>
 
       {/* Chart 2: Acknowledgement Rate per Department */}
-      <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700 p-5 transition-colors duration-200">
+      <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700 p-3 sm:p-5 min-w-0 transition-colors duration-200">
         <div className="flex items-center gap-2 mb-4">
           <ShieldCheck className="w-5 h-5 text-teal-500" />
           <h2 className="text-sm font-bold text-slate-800 dark:text-slate-100">การรับทราบรายงานแยกตามหน่วยงาน</h2>
         </div>
-        <div className="h-64">
+        <div className="h-56 sm:h-64 min-w-0">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={agencyAckData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
@@ -236,12 +236,12 @@ export default function Dashboard() {
       </div>
 
       {/* Chart 3: Activity Levels */}
-      <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700 p-5 lg:col-span-2 transition-colors duration-200">
+      <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700 p-3 sm:p-5 min-w-0 lg:col-span-2 transition-colors duration-200">
         <div className="flex items-center gap-2 mb-4">
           <Activity className="w-5 h-5 text-rose-500" />
           <h2 className="text-sm font-bold text-slate-800 dark:text-slate-100">ระดับกิจกรรมการใช้งาน (30 วันย้อนหลัง)</h2>
         </div>
-        <div className="h-72">
+        <div className="h-60 sm:h-72 min-w-0">
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={activityData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
@@ -265,16 +265,16 @@ export default function Dashboard() {
   );
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       <header>
-        <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100 drop-shadow-sm transition-colors duration-200">ยินดีต้อนรับสู่แดชบอร์ด</h1>
+        <h1 className="text-xl sm:text-2xl font-bold text-slate-800 dark:text-slate-100 drop-shadow-sm transition-colors duration-200">ยินดีต้อนรับสู่แดชบอร์ด</h1>
         <p className="text-slate-500 dark:text-slate-400 mt-1 text-sm font-medium transition-colors duration-200">ภาพรวมรายงานและการจัดการสำหรับผู้บริหาร</p>
       </header>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-4">
         {stats.map((stat, i) => (
-          <div key={i} className="bg-white dark:bg-slate-800 rounded-lg shadow-sm p-5 border border-slate-200 dark:border-slate-700 flex items-center gap-4 transition-colors duration-200">
+          <div key={i} className="bg-white dark:bg-slate-800 rounded-lg shadow-sm p-4 sm:p-5 border border-slate-200 dark:border-slate-700 flex items-center gap-3 sm:gap-4 transition-colors duration-200">
             <div className={`p-3 rounded-md ${stat.bg} dark:opacity-80`}>
               <stat.icon className={`w-6 h-6 ${stat.color}`} />
             </div>

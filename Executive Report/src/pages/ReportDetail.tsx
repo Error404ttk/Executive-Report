@@ -124,9 +124,9 @@ export default function ReportDetail() {
   };
 
   return (
-    <div className="space-y-6 pb-20">
+    <div className="space-y-4 sm:space-y-6 pb-12 sm:pb-20">
       {/* Header operations */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <button onClick={() => navigate(-1)} className="inline-flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-gray-900">
           <ArrowLeft className="w-4 h-4" />
           ย้อนกลับ
@@ -152,10 +152,10 @@ export default function ReportDetail() {
 
       {/* Main Card */}
       <div className="flex flex-col space-y-4">
-        <div className="bg-white p-5 rounded-lg shadow-sm border border-slate-200 flex-1 relative overflow-hidden">
+        <div className="bg-white p-3 sm:p-5 rounded-lg shadow-sm border border-slate-200 flex-1 relative overflow-hidden">
           <div className="flex items-start justify-between gap-4 flex-col sm:flex-row mb-6">
             <div>
-              <div className="flex items-center gap-3 mb-3 text-xs font-bold text-[#009688]">
+              <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-3 text-xs font-bold text-[#009688]">
                 <span className="uppercase">{report.category}</span>
                 <span>•</span>
                 <span>{new Date(report.uploadedAt).toLocaleString('th-TH')}</span>
@@ -163,7 +163,7 @@ export default function ReportDetail() {
               <h1 className="text-xl md:text-2xl font-bold text-slate-800 leading-tight">
                 {report.title}
               </h1>
-              <div className="mt-2 flex items-center gap-3 text-xs text-slate-600">
+              <div className="mt-2 flex items-start gap-2 text-xs text-slate-600 break-words">
                 <div className="p-1.5"><UserIcon className="w-4 h-4" /></div>
                 <span>อัปโหลดโดย: <strong>{uploader?.displayName}</strong> ({uploader?.email})</span>
               </div>
@@ -203,10 +203,10 @@ export default function ReportDetail() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
           {/* Left Column: AI Summary & Comments */}
-          <div className="lg:col-span-2 space-y-6">
-            <div className="bg-white p-5 rounded-lg shadow-sm border border-slate-200 relative overflow-hidden">
+          <div className="lg:col-span-2 space-y-4 sm:space-y-6 min-w-0">
+            <div className="bg-white p-3 sm:p-5 rounded-lg shadow-sm border border-slate-200 relative overflow-hidden">
               <div className="absolute top-0 right-0 p-2">
                 <span className="px-2 py-1 bg-teal-600 text-white text-[10px] rounded">AI ANALYSIS</span>
               </div>
@@ -313,30 +313,30 @@ export default function ReportDetail() {
       {/* Fullscreen PDF Modal */}
       {isFullscreen && (
         <div className="fixed inset-0 z-50 flex flex-col bg-slate-900/95 backdrop-blur-sm">
-          <div className="flex justify-between items-center p-4 bg-slate-900 border-b border-slate-800 shadow-sm">
-            <div className="flex items-center gap-3">
+          <div className="flex justify-between items-center gap-2 p-2 sm:p-4 bg-slate-900 border-b border-slate-800 shadow-sm">
+            <div className="flex items-center gap-2 sm:gap-3 min-w-0">
               <div className="p-2 bg-slate-800 rounded">
                 <FileText className="w-5 h-5 text-teal-500" />
               </div>
-              <h3 className="font-bold text-white text-sm md:text-base">
+              <h3 className="font-bold text-white text-xs sm:text-sm md:text-base truncate">
                 {report.title}
               </h3>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-1 sm:gap-3 shrink-0">
               <a 
                 href={report.fileUrl} 
                 target="_blank" 
                 rel="noreferrer"
-                className="text-slate-300 hover:text-white text-xs font-bold px-3 py-2"
+                className="hidden sm:inline-flex text-slate-300 hover:text-white text-xs font-bold px-3 py-2"
               >
                 เปิดในแท็บใหม่
               </a>
               <button 
                 onClick={() => setIsFullscreen(false)}
-                className="flex items-center gap-2 text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-200 px-4 py-2 rounded transition-colors border border-slate-700"
+                className="flex items-center gap-2 text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-200 px-2.5 sm:px-4 py-2 rounded transition-colors border border-slate-700"
               >
                 <Minimize className="w-4 h-4" />
-                ย่อหน้าจอ
+                <span className="hidden sm:inline">ย่อหน้าจอ</span>
               </button>
             </div>
           </div>
@@ -348,8 +348,8 @@ export default function ReportDetail() {
 
       {/* Edit Modal */}
       {showEditModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="bg-white rounded-lg shadow-xl w-full max-w-lg overflow-hidden">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-2 sm:p-4">
+          <div className="bg-white rounded-lg shadow-xl w-full max-w-lg max-h-[calc(100dvh-1rem)] sm:max-h-[calc(100dvh-2rem)] overflow-y-auto">
             <div className="flex items-center justify-between p-4 border-b border-gray-100">
               <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2">
                 <Edit className="w-5 h-5 text-[#009688]" />
@@ -360,7 +360,7 @@ export default function ReportDetail() {
               </button>
             </div>
             
-            <form onSubmit={handleEditSubmit} className="p-5 space-y-4">
+            <form onSubmit={handleEditSubmit} className="p-4 sm:p-5 space-y-4">
               <div>
                 <label className="block text-sm font-bold text-gray-700 mb-1">ชื่อรายงาน</label>
                 <input 
@@ -397,13 +397,13 @@ export default function ReportDetail() {
                 />
               </div>
 
-              <div className="pt-4 flex items-center justify-end gap-3 border-t border-slate-100">
-                <button type="button" onClick={() => setShowEditModal(false)} className="px-4 py-2 text-sm font-bold text-gray-700 bg-white border border-gray-300 rounded hover:bg-gray-50">
+              <div className="pt-4 flex flex-col-reverse sm:flex-row sm:items-center sm:justify-end gap-3 border-t border-slate-100">
+                <button type="button" onClick={() => setShowEditModal(false)} className="w-full sm:w-auto px-4 py-2 text-sm font-bold text-gray-700 bg-white border border-gray-300 rounded hover:bg-gray-50">
                   ยกเลิก
                 </button>
                 <button 
                   type="submit" 
-                  className="px-4 py-2 text-sm font-bold text-white rounded hover:opacity-90 min-w-[100px]"
+                  className="w-full sm:w-auto px-4 py-2 text-sm font-bold text-white rounded hover:opacity-90 sm:min-w-[100px]"
                   style={{ backgroundColor: '#009688' }}
                 >
                   บันทึก
@@ -416,8 +416,8 @@ export default function ReportDetail() {
 
       {/* Delete Modal */}
       {showDeleteModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="bg-white rounded-lg shadow-xl w-full max-w-md overflow-hidden">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-2 sm:p-4">
+          <div className="bg-white rounded-lg shadow-xl w-full max-w-md max-h-[calc(100dvh-1rem)] sm:max-h-[calc(100dvh-2rem)] overflow-y-auto">
             <div className="flex items-center justify-between p-4 border-b border-gray-100 bg-rose-50">
               <h2 className="text-lg font-bold text-rose-700 flex items-center gap-2">
                 <Trash2 className="w-5 h-5" />
@@ -428,7 +428,7 @@ export default function ReportDetail() {
               </button>
             </div>
             
-            <form onSubmit={handlePasswordSubmit} className="p-5 space-y-4">
+            <form onSubmit={handlePasswordSubmit} className="p-4 sm:p-5 space-y-4">
               <div className="bg-rose-50 text-rose-800 p-3 rounded text-sm font-medium mb-4">
                 คุณกำลังจะลบรายงาน "{report.title}"  
                 การกระทำนี้ไม่สามารถย้อนกลับได้ โปรดใส่รหัสผ่านผู้ดูแลระบบเพื่อยืนยัน
@@ -446,13 +446,13 @@ export default function ReportDetail() {
                 />
               </div>
 
-              <div className="pt-4 flex items-center justify-end gap-3 border-t border-slate-100">
-                <button type="button" onClick={() => setShowDeleteModal(false)} className="px-4 py-2 text-sm font-bold text-gray-700 bg-white border border-gray-300 rounded hover:bg-gray-50">
+              <div className="pt-4 flex flex-col-reverse sm:flex-row sm:items-center sm:justify-end gap-3 border-t border-slate-100">
+                <button type="button" onClick={() => setShowDeleteModal(false)} className="w-full sm:w-auto px-4 py-2 text-sm font-bold text-gray-700 bg-white border border-gray-300 rounded hover:bg-gray-50">
                   ยกเลิก
                 </button>
                 <button 
                   type="submit" 
-                  className="px-4 py-2 text-sm font-bold text-white bg-rose-600 rounded hover:bg-rose-700 min-w-[100px]"
+                  className="w-full sm:w-auto px-4 py-2 text-sm font-bold text-white bg-rose-600 rounded hover:bg-rose-700 sm:min-w-[100px]"
                 >
                   ยืนยันการลบ
                 </button>

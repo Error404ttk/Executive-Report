@@ -53,15 +53,15 @@ export default function ActivityLog() {
   const uniqueActions = Array.from(new Set(auditLogs.map(l => l.action)));
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       <header className="flex justify-between items-end">
         <div>
-          <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100 drop-shadow-sm transition-colors duration-200">บันทึกการใช้งานระบบ</h1>
+          <h1 className="text-xl sm:text-2xl font-bold text-slate-800 dark:text-slate-100 drop-shadow-sm transition-colors duration-200">บันทึกการใช้งานระบบ</h1>
           <p className="text-slate-500 dark:text-slate-400 mt-1 text-sm font-medium transition-colors duration-200">Activity Log & Audit Trail</p>
         </div>
       </header>
 
-      <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700 p-5 transition-colors duration-200">
+      <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700 p-3 sm:p-5 transition-colors duration-200">
         {/* Filters */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
           <div className="relative">
@@ -110,7 +110,7 @@ export default function ActivityLog() {
 
         {/* Table */}
         <div className="overflow-x-auto rounded border border-slate-200 dark:border-slate-700">
-          <table className="min-w-full divide-y divide-slate-200 dark:divide-slate-700 text-xs">
+          <table className="min-w-[760px] w-full divide-y divide-slate-200 dark:divide-slate-700 text-xs">
             <thead className="bg-slate-50 dark:bg-slate-900">
               <tr>
                 <th className="px-4 py-3 text-left font-bold text-slate-600 dark:text-slate-400">วัน/เวลา</th>

@@ -1,9 +1,10 @@
 import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
-import { NavLink, useNavigate, Link } from 'react-router-dom';
+import { NavLink, useNavigate, useLocation, Link } from 'react-router-dom';
 import { useAppStore } from '../store/useAppStore';
 import { 
   BarChart3, FileText, Users, Settings, LogOut, 
-  ShieldCheck, FileBadge, MessagesSquare, Laptop, Bell, Sun, Moon, Activity
+  ShieldCheck, FileBadge, MessagesSquare, Laptop, Bell, Sun, Moon, Activity,
+  Menu, X, PanelLeftClose, PanelLeftOpen
 } from 'lucide-react';
 import clsx from 'clsx';
 import { format } from 'date-fns';
@@ -13,8 +14,11 @@ import mophLogo from '../../MOPH Logo.png';
 export default function Layout({ children }: { children: React.ReactNode }) {
   const { currentUser, logout, reports, views, agencies, theme, setTheme } = useAppStore();
   const navigate = useNavigate();
+  const location = useLocation();
   const [showNotifications, setShowNotifications] = useState(false);
   const [showReleaseNote, setShowReleaseNote] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(() => localStorage.getItem('sidebar-collapsed') === 'true');
   const notifRef = useRef<HTMLDivElement>(null);
 
   // --- Session Timeout Variables ---
@@ -95,6 +99,14 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     };
   }, []);
 
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [location.pathname]);
+
+  useEffect(() => {
+    localStorage.setItem('sidebar-collapsed', String(isSidebarCollapsed));
+  }, [isSidebarCollapsed]);
+
   const unreadReports = useMemo(() =>
     reports
       .filter(r => !views.some(v => v.reportId === r.id && v.userId === currentUser?.id))
@@ -120,23 +132,31 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   ];
 
   return (
-    <div className="flex h-screen bg-[#F0F7F4] dark:bg-slate-900 flex-col overflow-hidden border-4 border-[#009688] dark:border-teal-900 transition-colors duration-200">
+    <div className="flex h-dvh min-h-0 bg-[#F0F7F4] dark:bg-slate-900 flex-col overflow-hidden border-2 sm:border-4 border-[#009688] dark:border-teal-900 transition-colors duration-200">
       {/* Header */}
-      <header className="bg-[#009688] dark:bg-teal-950 text-white p-4 flex justify-between items-center shadow-md z-10 shrink-0 transition-colors duration-200">
-        <div className="flex items-center space-x-3">
-          <div className="bg-white p-1 rounded-full dark:bg-teal-900">
+      <header className="bg-[#009688] dark:bg-teal-950 text-white px-2.5 py-2 sm:px-4 sm:py-3 flex justify-between items-center gap-2 shadow-md z-50 shrink-0 transition-colors duration-200">
+        <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+          <button
+            type="button"
+            onClick={() => setIsMobileMenuOpen(true)}
+            className="md:hidden p-2 hover:bg-teal-700 dark:hover:bg-teal-800 rounded-lg transition-colors shrink-0"
+            aria-label="เปิดเมนูหลัก"
+          >
+            <Menu className="h-5 w-5" />
+          </button>
+          <div className="bg-white p-1 rounded-full dark:bg-teal-900 shrink-0">
             <img src={mophLogo} 
                  alt="MOPH Logo" 
-                 className="h-8 w-8 object-contain" 
+                 className="h-7 w-7 sm:h-8 sm:w-8 object-contain"
             />
           </div>
-          <div>
-            <h1 className="text-xl font-bold leading-tight uppercase text-white">Executive Report</h1>
-            <p className="text-xs text-white opacity-90 dark:opacity-75">โรงพยาบาลสารภี Saraphi Hospital</p>
+          <div className="min-w-0">
+            <h1 className="text-sm sm:text-xl font-bold leading-tight uppercase text-white truncate">Executive Report</h1>
+            <p className="hidden sm:block text-xs text-white opacity-90 dark:opacity-75 truncate">โรงพยาบาลสารภี Saraphi Hospital</p>
           </div>
         </div>
-        <div className="flex items-center space-x-4">
-            <div className="text-right border-r border-teal-400 dark:border-teal-800 pr-4 hidden sm:block">
+        <div className="flex items-center gap-0.5 sm:gap-2 shrink-0">
+            <div className="text-right border-r border-teal-400 dark:border-teal-800 pr-3 hidden lg:block max-w-56">
               <p className="text-sm font-semibold">{currentUser?.displayName}</p>
               <p className="text-[10px] bg-teal-700 dark:bg-teal-800 px-2 rounded-full mt-0.5 inline-block">สิทธิ์การใช้งาน: {currentUser?.role === 'admin' ? 'ผู้ดูแลระบบ' : currentUser?.role === 'executive' ? 'ผู้บริหารระดับสูง' : 'ผู้ใช้งานทั่วไป'}</p>
             </div>
@@ -154,7 +174,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 onClick={() => setShowNotifications(!showNotifications)}
                 className="p-2 hover:bg-teal-700 dark:hover:bg-teal-800 rounded-lg transition-colors relative"
               >
-                <Bell className="h-6 w-6" />
+                <Bell className="h-5 w-5 sm:h-6 sm:w-6" />
                 {unreadCount > 0 && (
                   <span className="absolute top-1 right-1 bg-rose-500 text-white text-[10px] font-bold h-4 w-4 rounded-full flex items-center justify-center">
                     {unreadCount > 99 ? '99+' : unreadCount}
@@ -163,7 +183,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               </button>
 
               {showNotifications && (
-                <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-slate-800 rounded-lg shadow-xl border border-slate-200 dark:border-slate-700 overflow-hidden z-50">
+                <div className="fixed left-3 right-3 top-14 sm:absolute sm:left-auto sm:right-0 sm:top-auto sm:mt-2 sm:w-80 bg-white dark:bg-slate-800 rounded-lg shadow-xl border border-slate-200 dark:border-slate-700 overflow-hidden z-[70]">
                   <div className="p-3 border-b border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 flex justify-between items-center">
                     <h3 className="text-sm font-bold text-slate-800 dark:text-slate-200">การแจ้งเตือน</h3>
                     {unreadCount > 0 && (
@@ -205,44 +225,74 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               onClick={handleLogout}
               className="p-2 hover:bg-teal-700 dark:hover:bg-teal-800 rounded-lg transition-colors"
             >
-              <LogOut className="h-6 w-6" />
+              <LogOut className="h-5 w-5 sm:h-6 sm:w-6" />
             </button>
           </div>
       </header>
 
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-1 min-h-0 overflow-hidden relative">
+        {isMobileMenuOpen && (
+          <button
+            type="button"
+            className="fixed inset-0 z-30 bg-slate-950/45 backdrop-blur-[1px] md:hidden"
+            onClick={() => setIsMobileMenuOpen(false)}
+            aria-label="ปิดเมนูหลัก"
+          />
+        )}
+
         {/* Sidebar */}
-        <aside className="w-64 bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 flex-shrink-0 flex flex-col justify-between overflow-y-auto transition-colors duration-200">
-          <nav className="p-4 space-y-1">
-            <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase mb-2">เมนูหลัก / ประเภทรายงาน</p>
+        <aside className={clsx(
+          "fixed inset-y-0 left-0 z-40 w-[min(18rem,86vw)] bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 flex-shrink-0 flex flex-col overflow-hidden shadow-2xl transition-[transform,width] duration-200 md:static md:translate-x-0 md:shadow-none",
+          isMobileMenuOpen ? "translate-x-0" : "-translate-x-full",
+          isSidebarCollapsed ? "md:w-20" : "md:w-64"
+        )}>
+          <div className="md:hidden flex items-center justify-between px-4 py-3 border-b border-slate-200 dark:border-slate-700">
+            <span className="text-sm font-bold text-slate-700 dark:text-slate-200">เมนูหลัก</span>
+            <button type="button" onClick={() => setIsMobileMenuOpen(false)} className="p-2 rounded-md text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700" aria-label="ปิดเมนู">
+              <X className="h-5 w-5" />
+            </button>
+          </div>
+          <nav className={clsx("flex-1 overflow-y-auto space-y-1", isSidebarCollapsed ? "md:p-3" : "p-4")}>
+            <p className={clsx("text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase mb-2", isSidebarCollapsed && "md:hidden")}>เมนูหลัก / ประเภทรายงาน</p>
             {navItems.filter(item => item.roles.includes(currentUser?.role || '')).map((item) => (
               <NavLink
                 key={item.to}
                 to={item.to}
+                title={isSidebarCollapsed ? item.label : undefined}
                 className={({ isActive }) => clsx(
-                  "flex items-center space-x-3 p-2 rounded-md text-sm font-medium transition-colors",
+                  "flex items-center min-h-10 rounded-md text-sm font-medium transition-colors",
+                  isSidebarCollapsed ? "md:justify-center md:px-2 gap-3 px-3" : "gap-3 px-3",
                   isActive 
                     ? "bg-teal-50 dark:bg-teal-900/40 text-teal-700 dark:text-teal-300 border-l-4 border-teal-600 dark:border-teal-500" 
                     : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700/50"
                 )}
               >
                 <item.icon className="h-5 w-5 shrink-0" />
-                <span>{item.label}</span>
+                <span className={clsx("leading-snug", isSidebarCollapsed && "md:hidden")}>{item.label}</span>
               </NavLink>
             ))}
           </nav>
+          <button
+            type="button"
+            onClick={() => setIsSidebarCollapsed(value => !value)}
+            className="hidden md:flex items-center justify-center gap-2 min-h-12 border-t border-slate-200 dark:border-slate-700 text-xs font-semibold text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700/50"
+            title={isSidebarCollapsed ? 'ขยายเมนู' : 'ย่อเมนู'}
+          >
+            {isSidebarCollapsed ? <PanelLeftOpen className="h-5 w-5" /> : <PanelLeftClose className="h-5 w-5" />}
+            {!isSidebarCollapsed && <span>ย่อเมนู</span>}
+          </button>
         </aside>
 
         {/* Main Content */}
-        <main className="flex-1 overflow-y-auto p-6 md:p-8 bg-transparent">
-          <div className="max-w-5xl mx-auto">
+        <main className="flex-1 min-w-0 overflow-y-auto overscroll-contain p-3 sm:p-5 lg:p-7 bg-transparent">
+          <div className="w-full max-w-screen-2xl mx-auto">
             {children}
           </div>
         </main>
       </div>
 
       {/* Footer */}
-      <footer className="bg-slate-100 dark:bg-slate-800 border-t border-slate-300 dark:border-slate-700 p-2 flex flex-wrap justify-between items-center px-6 shrink-0 mt-auto transition-colors duration-200">
+      <footer className="bg-slate-100 dark:bg-slate-800 border-t border-slate-300 dark:border-slate-700 px-3 sm:px-6 py-1.5 flex flex-wrap justify-between items-center gap-1.5 shrink-0 mt-auto transition-colors duration-200">
         <div className="flex items-center space-x-4">
           <p className="text-[10px] text-slate-500 dark:text-slate-400 font-medium italic">v.{format(new Date(), 'ddMMyyyy', { locale: th })}</p>
           <button
@@ -252,9 +302,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             📋 Release Notes — v.1.0.0
           </button>
         </div>
-        <div className="flex flex-wrap items-center space-x-2 text-[10px] text-slate-600 dark:text-slate-400">
-          <span className="font-bold">อัปเดตล่าสุด:</span>
-          <span>{format(new Date(), 'dd MMM yy HH:mm', { locale: th })} น.</span>
+        <div className="flex flex-wrap items-center gap-2 text-[10px] text-slate-600 dark:text-slate-400">
+          <span className="hidden sm:inline font-bold">อัปเดตล่าสุด:</span>
+          <span className="hidden sm:inline">{format(new Date(), 'dd MMM yy HH:mm', { locale: th })} น.</span>
           <span className="px-2 py-0.5 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-full border border-green-200 dark:border-green-800/50">Connected</span>
         </div>
       </footer>

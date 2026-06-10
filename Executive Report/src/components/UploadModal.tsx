@@ -126,16 +126,16 @@ export default function UploadModal({ category, onClose, onSuccess }: UploadModa
 
   return (
     <>
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-        <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg overflow-hidden">
-          <div className="flex items-center justify-between p-6 border-b border-gray-100">
-            <h2 className="text-xl font-bold text-gray-900">อัปโหลดรายงานใหม่</h2>
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-2 sm:p-4">
+        <div className="bg-white rounded-xl sm:rounded-2xl shadow-xl w-full max-w-lg max-h-[calc(100dvh-1rem)] sm:max-h-[calc(100dvh-2rem)] overflow-y-auto">
+          <div className="flex items-center justify-between p-4 sm:p-6 border-b border-gray-100">
+            <h2 className="text-lg sm:text-xl font-bold text-gray-900">อัปโหลดรายงานใหม่</h2>
             <button type="button" onClick={onClose} className="text-gray-400 hover:text-gray-600">
               <X className="w-5 h-5" />
             </button>
           </div>
 
-          <form onSubmit={handleSubmit} className="p-6 space-y-5">
+          <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-5">
             {/* Title */}
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-1">ชื่อรายงาน</label>
@@ -162,7 +162,7 @@ export default function UploadModal({ category, onClose, onSuccess }: UploadModa
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-1">ไฟล์รายงาน (PDF)</label>
               <div
-                className={`mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-dashed rounded-lg transition-colors cursor-pointer
+                className={`mt-1 flex justify-center px-3 sm:px-6 pt-4 sm:pt-5 pb-4 sm:pb-6 border-2 border-dashed rounded-lg transition-colors cursor-pointer
                   ${isDragging ? 'border-teal-500 bg-teal-50' : 'border-gray-300 bg-gray-50 hover:bg-gray-100'}`}
                 onDragOver={handleDragOver}
                 onDragLeave={handleDragLeave}
@@ -185,25 +185,25 @@ export default function UploadModal({ category, onClose, onSuccess }: UploadModa
                 </div>
               </div>
               {file && (
-                <p className="mt-2 text-sm text-teal-600 font-medium flex items-center gap-2">
-                  <FileText className="w-4 h-4" /> ไฟล์ที่เลือก: {file.name}
+                <p className="mt-2 text-sm text-teal-600 font-medium flex items-start gap-2 break-all">
+                  <FileText className="w-4 h-4 shrink-0 mt-0.5" /> ไฟล์ที่เลือก: {file.name}
                 </p>
               )}
             </div>
 
             {/* Actions */}
-            <div className="pt-4 flex items-center justify-end gap-3">
+            <div className="pt-4 flex flex-col-reverse sm:flex-row sm:items-center sm:justify-end gap-3">
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
+                className="w-full sm:w-auto px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
               >
                 ยกเลิก
               </button>
               <button
                 type="submit"
                 disabled={!file || !title || isUploading}
-                className="inline-flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-white bg-[#009688] rounded-lg hover:bg-teal-700 disabled:opacity-50 disabled:cursor-not-allowed min-w-[130px] transition-colors"
+                className="inline-flex w-full sm:w-auto items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-white bg-[#009688] rounded-lg hover:bg-teal-700 disabled:opacity-50 disabled:cursor-not-allowed sm:min-w-[130px] transition-colors"
               >
                 {isUploading ? (
                   <><Loader2 className="w-4 h-4 animate-spin" /> กำลังวิเคราะห์ AI...</>
