@@ -67,6 +67,8 @@ function UsersManager({ users, agencies, addUser, updateUser, deleteUser }: any)
   const [role, setRole] = useState<'admin' | 'executive' | 'user'>('user');
   const [agencyId, setAgencyId] = useState('');
   const [password, setPassword] = useState('');
+  const [formError, setFormError] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
 
   const openAddModal = () => {
     setEditingUser(null);
@@ -75,6 +77,7 @@ function UsersManager({ users, agencies, addUser, updateUser, deleteUser }: any)
     setRole('user');
     setAgencyId(agencies[0]?.id || '');
     setPassword('');
+    setFormError('');
     setShowModal(true);
   };
 
@@ -85,37 +88,58 @@ function UsersManager({ users, agencies, addUser, updateUser, deleteUser }: any)
     setRole(user.role);
     setAgencyId(user.agencyId || '');
     setPassword('');
+    setFormError('');
     setShowModal(true);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email || !displayName) return;
+    const normalizedEmail = email.trim();
+    const normalizedDisplayName = displayName.trim();
+    setFormError('');
 
-    if (editingUser) {
-      // Edit mode
-      await updateUser({
-        ...editingUser,
-        email,
-        displayName,
-        role,
-        agencyId: agencyId || undefined
-      }, password || undefined);
-    } else {
-      // Add mode
-      if (!password) {
-        alert('กรุณากำหนดรหัสผ่านสำหรับผู้ใช้ใหม่');
+    if (!normalizedEmail || !normalizedDisplayName) {
+      setFormError('กรุณากรอกชื่อและอีเมลให้ครบถ้วน');
+      return;
+    }
+    if (password && password.length < 8) {
+      setFormError('รหัสผ่านต้องมีอย่างน้อย 8 ตัวอักษร');
+      return;
+    }
+
+    setIsSaving(true);
+    try {
+      let result: { success: boolean; error?: string };
+      if (editingUser) {
+        result = await updateUser({
+          ...editingUser,
+          email: normalizedEmail,
+          displayName: normalizedDisplayName,
+          role,
+          agencyId: agencyId || undefined
+        }, password || undefined);
+      } else {
+        if (!password) {
+          setFormError('กรุณากำหนดรหัสผ่านสำหรับผู้ใช้ใหม่');
+          return;
+        }
+        result = await addUser({
+          id: self.crypto.randomUUID(),
+          email: normalizedEmail,
+          displayName: normalizedDisplayName,
+          role,
+          agencyId: agencyId || undefined
+        }, password);
+      }
+
+      if (!result.success) {
+        setFormError(result.error || 'ไม่สามารถบันทึกข้อมูลผู้ใช้งานได้');
         return;
       }
-      await addUser({
-        id: self.crypto.randomUUID(),
-        email,
-        displayName,
-        role,
-        agencyId: agencyId || undefined
-      }, password);
+      setShowModal(false);
+    } finally {
+      setIsSaving(false);
     }
-    setShowModal(false);
   };
 
   return (
@@ -248,6 +272,7 @@ function UsersManager({ users, agencies, addUser, updateUser, deleteUser }: any)
                 <input 
                   type="password" 
                   required={!editingUser}
+                  minLength={8}
                   value={password}
                   onChange={e => setPassword(e.target.value)}
                   placeholder={editingUser ? "เปลี่ยนรหัสผ่านใหม่..." : "ระบุรหัสผ่านเข้าใช้งาน..."}
@@ -255,19 +280,27 @@ function UsersManager({ users, agencies, addUser, updateUser, deleteUser }: any)
                 />
               </div>
 
+              {formError && (
+                <div role="alert" className="rounded border border-red-200 bg-red-50 px-3 py-2 text-xs font-medium text-red-700">
+                  {formError}
+                </div>
+              )}
+
               <div className="pt-4 flex items-center justify-end gap-2 border-t border-slate-100">
                 <button 
                   type="button" 
                   onClick={() => setShowModal(false)} 
-                  className="px-4 py-2 text-xs font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors cursor-pointer"
+                  disabled={isSaving}
+                  className="px-4 py-2 text-xs font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors cursor-pointer disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   ยกเลิก
                 </button>
                 <button 
                   type="submit" 
-                  className="px-4 py-2 text-xs font-semibold text-white bg-[#009688] hover:bg-teal-700 rounded-lg transition-colors shadow-sm cursor-pointer"
+                  disabled={isSaving}
+                  className="px-4 py-2 text-xs font-semibold text-white bg-[#009688] hover:bg-teal-700 rounded-lg transition-colors shadow-sm cursor-pointer disabled:cursor-not-allowed disabled:opacity-60"
                 >
-                  บันทึกข้อมูล
+                  {isSaving ? 'กำลังบันทึก...' : 'บันทึกข้อมูล'}
                 </button>
               </div>
             </form>
