@@ -13,6 +13,7 @@
 
 - Web listener now defaults to port `3012`; API listener now defaults to port `3013`.
 - Web server proxies `/api` and `/uploads` to the API listener so existing frontend calls keep working.
+- Removed unused Node 22-only dependencies so deployments on Node 20 do not emit EBADENGINE warnings.
 - PDF AI summaries are normalized into short Thai bullet points for executive reading.
 - Build output now uses `dist/server.js` as the production server entrypoint.
 - Uploaded files are stored through configurable `UPLOAD_DIR` instead of build output paths.

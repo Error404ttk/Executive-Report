@@ -11,7 +11,6 @@ import { fileURLToPath } from 'url';
 import crypto from 'crypto';
 import mysql from 'mysql2/promise';
 import rateLimit from 'express-rate-limit';
-import { fileTypeFromBuffer } from 'file-type';
 import helmet from 'helmet';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -110,6 +109,10 @@ function normalizeBulletSummary(input: string): string {
     .slice(0, 6)
     .map((point) => `- ${point.length > 220 ? `${point.slice(0, 217)}...` : point}`)
     .join('\n');
+}
+
+function isPdfBuffer(buffer: Buffer): boolean {
+  return buffer.subarray(0, 5).toString('ascii') === '%PDF-';
 }
 
 type SessionPayload = {
@@ -1174,8 +1177,7 @@ async function startServer() {
         }
 
         const buffer = await fs.promises.readFile(file.tempFilePath);
-        const fileTypeMeta = await fileTypeFromBuffer(buffer.subarray(0, 4100));
-        if (!fileTypeMeta || fileTypeMeta.mime !== 'application/pdf') {
+        if (!isPdfBuffer(buffer)) {
           fs.unlink(file.tempFilePath, () => {});
           return res.status(400).json({ error: 'ไฟล์ที่อัปโหลดต้องเป็น PDF เท่านั้น' });
         }
@@ -1212,8 +1214,7 @@ async function startServer() {
 
       // [FIX-2] Validate MIME type by reading magic bytes from temp file
       const buffer = await fs.promises.readFile(file.tempFilePath);
-      const fileTypeMeta = await fileTypeFromBuffer(buffer.subarray(0, 4100));
-      if (!fileTypeMeta || fileTypeMeta.mime !== 'application/pdf') {
+      if (!isPdfBuffer(buffer)) {
         fs.unlink(file.tempFilePath, () => {});
         return res.status(400).json({ error: 'ไฟล์ที่อัปโหลดต้องเป็น PDF เท่านั้น' });
       }
