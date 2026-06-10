@@ -64,19 +64,23 @@ export default function Dashboard() {
 
   // Chart 2: Acknowledgement rates per department
   const agencyAckData = useMemo(() => {
+    const executiveUserIds = new Set(
+      users.filter(user => user.role === 'executive').map(user => user.id)
+    );
+    const executiveAcknowledgedReportIds = new Set(
+      acknowledgments
+        .filter(ack => executiveUserIds.has(ack.userId))
+        .map(ack => ack.reportId)
+    );
+
     return agencies.map(agency => {
-        const agencyUsers = users.filter(u => u.agencyId === agency.id);
-        const agencyUserIds = agencyUsers.map(u => u.id);
-        
-        const acks = acknowledgments.filter(ack => agencyUserIds.includes(ack.userId)).length;
-        
-        // Target: Total reports * number of users in agency (simplistic maximum possible acks)
-        const totalPossible = reports.length * agencyUsers.length;
+        const agencyReports = reports.filter(report => report.agencyId === agency.id);
+        const acknowledgedReports = agencyReports.filter(report => executiveAcknowledgedReportIds.has(report.id)).length;
         
         return {
             name: agency.name,
-            'รับทราบแล้ว': acks,
-            'รอรับทราบ': totalPossible > acks ? totalPossible - acks : 0
+            'รับทราบแล้ว': acknowledgedReports,
+            'รอรับทราบ': agencyReports.length - acknowledgedReports
         };
     });
   }, [agencies, users, acknowledgments, reports]);
