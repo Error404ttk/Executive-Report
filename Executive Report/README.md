@@ -23,7 +23,8 @@ Detailed deploy commands are in [PRD_DEPLOY_RUNBOOK.md](PRD_DEPLOY_RUNBOOK.md).
 Required production variables:
 
 - `NODE_ENV=production`
-- `PORT`
+- `WEB_PORT=3012`
+- `API_PORT=3013`
 - `SESSION_SECRET`
 - `GEMINI_API_KEY`
 - `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, `DB_NAME`
@@ -94,8 +95,24 @@ server {
 
   client_max_body_size 50m;
 
+  location /api/ {
+    proxy_pass http://127.0.0.1:3013;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+  }
+
+  location /uploads/ {
+    proxy_pass http://127.0.0.1:3013;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+  }
+
   location / {
-    proxy_pass http://127.0.0.1:3000;
+    proxy_pass http://127.0.0.1:3012;
     proxy_set_header Host $host;
     proxy_set_header X-Real-IP $remote_addr;
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -115,8 +132,10 @@ npm run prd:smoke
 Or check endpoints directly:
 
 ```bash
-curl -fsS http://127.0.0.1:3000/api/health
-curl -fsS http://127.0.0.1:3000/api/db/health
+curl -fsS http://127.0.0.1:3012/
+curl -fsS http://127.0.0.1:3012/api/health
+curl -fsS http://127.0.0.1:3013/api/health
+curl -fsS http://127.0.0.1:3013/api/db/health
 ```
 
 Then verify in browser:

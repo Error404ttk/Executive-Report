@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 dotenv.config();
 import express from 'express';
+import http from 'http';
 import path from 'path';
 import { createServer as createViteServer } from 'vite';
 import fileUpload from 'express-fileupload';
@@ -439,7 +440,8 @@ function requireRole(...roles: string[]) {
 async function startServer() {
   await initDatabase();
   const app = express();
-  const PORT = Number(process.env.PORT || 3000);
+  const WEB_PORT = Number(process.env.WEB_PORT || process.env.PORT || 3012);
+  const API_PORT = Number(process.env.API_PORT || 3013);
   fs.mkdirSync(runtimeUploadDir, { recursive: true });
   fs.mkdirSync(tempDir, { recursive: true });
 
@@ -1235,6 +1237,40 @@ async function startServer() {
     }
   });
 
+  const webApp = express();
+
+  function proxyToApi(req: express.Request, res: express.Response) {
+    const headers = { ...req.headers, host: `127.0.0.1:${API_PORT}` };
+    const proxyReq = http.request(
+      {
+        hostname: '127.0.0.1',
+        port: API_PORT,
+        path: req.originalUrl,
+        method: req.method,
+        headers,
+      },
+      (proxyRes) => {
+        res.status(proxyRes.statusCode || 502);
+        Object.entries(proxyRes.headers).forEach(([key, value]) => {
+          if (value !== undefined) res.setHeader(key, value);
+        });
+        proxyRes.pipe(res);
+      }
+    );
+
+    proxyReq.on('error', (error) => {
+      console.error('API proxy error:', error);
+      if (!res.headersSent) {
+        res.status(502).json({ error: 'API service unavailable' });
+      }
+    });
+
+    req.pipe(proxyReq);
+  }
+
+  webApp.use('/api', proxyToApi);
+  webApp.use('/uploads', proxyToApi);
+
   // Vite middleware for development
   if (process.env.NODE_ENV !== "production") {
     const vite = await createViteServer({
@@ -1242,19 +1278,21 @@ async function startServer() {
       appType: "spa",
     });
     // @ts-ignore
-    app.use(vite.middlewares);
+    webApp.use(vite.middlewares);
   } else {
     const distPath = path.join(process.cwd(), 'dist');
-    app.use(express.static(distPath));
-    // Provide virtual path for uploads if needed, public is part of dist
-    // Actually vite dist won't contain runtime uploads easily, but we'll deal with it for this dev demo.
-    app.get('*', (req, res) => {
+    webApp.use(express.static(distPath));
+    webApp.get('*', (req, res) => {
       res.sendFile(path.join(distPath, 'index.html'));
     });
   }
 
-  app.listen(PORT, "0.0.0.0", () => {
-    console.log(`Server running on http://localhost:${PORT}`);
+  app.listen(API_PORT, "0.0.0.0", () => {
+    console.log(`API server running on http://localhost:${API_PORT}`);
+  });
+
+  webApp.listen(WEB_PORT, "0.0.0.0", () => {
+    console.log(`Web server running on http://localhost:${WEB_PORT}`);
   });
 }
 

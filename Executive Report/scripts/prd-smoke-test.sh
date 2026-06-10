@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-APP_BASE_URL="${APP_BASE_URL:-http://127.0.0.1:${PORT:-3000}}"
+APP_BASE_URL="${APP_BASE_URL:-http://127.0.0.1:${WEB_PORT:-3012}}"
+API_BASE_URL="${API_BASE_URL:-http://127.0.0.1:${API_PORT:-3013}}"
 ENV_FILE="${ENV_FILE:-.env}"
 
 fail() {
@@ -30,7 +31,8 @@ env_value() {
 }
 
 printf 'Executive Report PRD smoke test\n'
-printf 'Target: %s\n\n' "$APP_BASE_URL"
+printf 'Web target: %s\n' "$APP_BASE_URL"
+printf 'API target: %s\n\n' "$API_BASE_URL"
 
 require_file "$ENV_FILE"
 require_file "dist/server.js"
@@ -38,7 +40,7 @@ require_file "dist/index.html"
 require_file "migrations/001_production_schema.sql"
 
 for key in \
-  NODE_ENV PORT SESSION_SECRET GEMINI_API_KEY \
+  NODE_ENV WEB_PORT API_PORT SESSION_SECRET GEMINI_API_KEY \
   DB_HOST DB_PORT DB_USER DB_PASSWORD DB_NAME \
   UPLOAD_DIR TMP_DIR \
   DEFAULT_ADMIN_EMAIL DEFAULT_ADMIN_PASSWORD \
@@ -68,11 +70,17 @@ TMP_DIR_VALUE="$(env_value TMP_DIR)"
 [[ -w "$TMP_DIR_VALUE" ]] || fail "TMP_DIR is not writable: $TMP_DIR_VALUE"
 pass "runtime directories exist and are writable"
 
-curl -fsS "${APP_BASE_URL}/api/health" >/dev/null || fail "/api/health failed"
-pass "/api/health"
+curl -fsS "${APP_BASE_URL}/" >/dev/null || fail "web root failed"
+pass "web root"
 
-curl -fsS "${APP_BASE_URL}/api/db/health" >/dev/null || fail "/api/db/health failed"
-pass "/api/db/health"
+curl -fsS "${APP_BASE_URL}/api/health" >/dev/null || fail "web proxy /api/health failed"
+pass "web proxy /api/health"
+
+curl -fsS "${API_BASE_URL}/api/health" >/dev/null || fail "api /api/health failed"
+pass "api /api/health"
+
+curl -fsS "${API_BASE_URL}/api/db/health" >/dev/null || fail "api /api/db/health failed"
+pass "api /api/db/health"
 
 printf '\nManual browser checks still required:\n'
 printf '1. Login as admin\n'

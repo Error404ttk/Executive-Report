@@ -11,6 +11,8 @@
 
 ### Changed
 
+- Web listener now defaults to port `3012`; API listener now defaults to port `3013`.
+- Web server proxies `/api` and `/uploads` to the API listener so existing frontend calls keep working.
 - PDF AI summaries are normalized into short Thai bullet points for executive reading.
 - Build output now uses `dist/server.js` as the production server entrypoint.
 - Uploaded files are stored through configurable `UPLOAD_DIR` instead of build output paths.

@@ -18,6 +18,8 @@ openssl rand -hex 32
 ตั้งค่า `.env` จริงให้ครบ โดยเฉพาะ:
 
 - `NODE_ENV=production`
+- `WEB_PORT=3012`
+- `API_PORT=3013`
 - `SESSION_SECRET`
 - `GEMINI_API_KEY`
 - `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, `DB_NAME`
@@ -64,6 +66,11 @@ If the app is behind a domain or non-default port:
 ```bash
 APP_BASE_URL=https://reports.example.go.th npm run prd:smoke
 ```
+
+Direct local targets after start:
+
+- Web: `http://127.0.0.1:3012`
+- API: `http://127.0.0.1:3013`
 
 ## 7. Manual Smoke Test
 
