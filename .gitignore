@@ -1,0 +1,17 @@
+.env
+.env.*
+.DS_Store
+*.log
+*.zip
+node_modules/
+dist/
+data/
+npm-debug.log*
+
+Executive Report/.env
+Executive Report/.env.*
+!Executive Report/.env.example
+Executive Report/node_modules/
+Executive Report/dist/
+Executive Report/public/uploads/
+Executive Report/db.json

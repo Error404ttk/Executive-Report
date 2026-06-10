@@ -1,0 +1,28 @@
+@import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --font-sans: 'Sarabun', ui-sans-serif, system-ui, sans-serif;
+  --color-health-green: #009688;
+  --color-health-light-green: #F0F7F4;
+  --color-health-gold: #00796B;
+}
+
+body {
+  font-family: 'Sarabun', sans-serif;
+  @apply bg-[#F0F7F4] text-slate-800 dark:bg-slate-900 dark:text-slate-100;
+  height: 100vh;
+  margin: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 0%;
+  overflow: hidden;
+}
