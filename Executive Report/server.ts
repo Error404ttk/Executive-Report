@@ -23,6 +23,7 @@ const VALID_CATEGORIES = new Set(['agency', 'department', 'meeting', 'audit', 'c
 const VALID_ROLES = new Set(['admin', 'executive', 'user']);
 const MAX_UPLOAD_BYTES = Number(process.env.MAX_UPLOAD_BYTES || 50 * 1024 * 1024);
 const SESSION_SECRET = process.env.SESSION_SECRET || (isProduction ? '' : crypto.randomBytes(32).toString('hex'));
+const TRUST_PROXY = normalizeTrustProxy(process.env.TRUST_PROXY);
 const REPORT_ANALYSIS_PROMPT = `วิเคราะห์รายงาน PDF นี้เป็นภาษาไทย และตอบกลับเป็น JSON เท่านั้น
 
 ข้อกำหนดสำหรับ summary:
@@ -68,6 +69,15 @@ function isValidCategory(value: unknown): value is string {
 
 function isValidRole(value: unknown): value is string {
   return typeof value === 'string' && VALID_ROLES.has(value);
+}
+
+function normalizeTrustProxy(value: string | undefined): boolean | number | string {
+  if (!value) return 'loopback';
+  const normalized = value.trim().toLowerCase();
+  if (normalized === 'true') return true;
+  if (normalized === 'false') return false;
+  if (/^\d+$/.test(normalized)) return Number(normalized);
+  return value;
 }
 
 function getUser(req: express.Request) {
@@ -443,6 +453,7 @@ function requireRole(...roles: string[]) {
 async function startServer() {
   await initDatabase();
   const app = express();
+  app.set('trust proxy', TRUST_PROXY);
   const WEB_PORT = Number(process.env.WEB_PORT || process.env.PORT || 3012);
   const API_PORT = Number(process.env.API_PORT || 3013);
   fs.mkdirSync(runtimeUploadDir, { recursive: true });
@@ -1239,6 +1250,7 @@ async function startServer() {
   });
 
   const webApp = express();
+  webApp.set('trust proxy', TRUST_PROXY);
 
   function proxyToApi(req: express.Request, res: express.Response) {
     const headers = { ...req.headers, host: `127.0.0.1:${API_PORT}` };

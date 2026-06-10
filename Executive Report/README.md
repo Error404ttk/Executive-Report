@@ -25,6 +25,7 @@ Required production variables:
 - `NODE_ENV=production`
 - `WEB_PORT=3012`
 - `API_PORT=3013`
+- `TRUST_PROXY=loopback` when running behind a local reverse proxy, or `TRUST_PROXY=1` when there is exactly one trusted proxy hop
 - `SESSION_SECRET`
 - `GEMINI_API_KEY`
 - `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, `DB_NAME`
